@@ -7,7 +7,7 @@ from submission.direct_submission import DirectSubmission
 from submission.submission import Submission, DownloadException
 
 
-class GfycatSubmission(Submission):
+class RedgifSubmission(Submission):
 
     def __init__(self, user_agent, reddit_submission):
         super().__init__(reddit_submission)
@@ -21,14 +21,10 @@ class GfycatSubmission(Submission):
     def _get_gfycat_submission_url(self):
         result = re.search('/([a-zA-Z0-9\\-]+)[.a-zA-Z0-9]*$', urllib.parse.urlparse(self._reddit_submission.url).path)
         if result is None:
-            raise DownloadException('Could not retrieve gfycat name from url: ' + self._reddit_submission.url)
+            raise DownloadException('Could not retrieve redgif name from url: ' + self._reddit_submission.url)
         try:
-            try:
-                r = requests.get('https://api.gfycat.com/v1/gfycats/' + result.group(1))
-                r.raise_for_status()
-            except requests.exceptions.RequestException as exception:
-                r = requests.get('https://api.redgifs.com/v1/gfycats/' + result.group(1))
-                r.raise_for_status()
+            r = requests.get('https://api.redgifs.com/v1/gfycats/' + result.group(1))
+            r.raise_for_status()
 
             json = r.json()
             if 'gfyItem' not in json:

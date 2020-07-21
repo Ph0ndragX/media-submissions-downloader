@@ -5,6 +5,7 @@ from submission.direct_submission import DirectSubmission
 from submission.gfycat_submission import GfycatSubmission
 from submission.imgur_submission import ImgurSubmission
 from submission.tumblr_submission import TumblrSubmission
+from submission.redgif_submission import RedgifSubmission
 
 
 class MediaSubmissions:
@@ -45,11 +46,13 @@ class MediaSubmissions:
         if MediaSubmissions.direct_image_link(reddit_submission):
             return DirectSubmission(self._config.user_agent(), reddit_submission, reddit_submission.url)
         elif 'imgur' in reddit_submission.url:
-            return ImgurSubmission(self._imgur, reddit_submission)
+            return ImgurSubmission(self._config.user_agent(), self._imgur, reddit_submission)
         elif 'gfycat' in reddit_submission.url:
-            return GfycatSubmission(reddit_submission)
+            return GfycatSubmission(self._config.user_agent(), reddit_submission)
         elif 'tumblr' in reddit_submission.url:
             return TumblrSubmission(None, reddit_submission)
+        elif 'redgifs' in reddit_submission.url:
+            return RedgifSubmission(self._config.user_agent(), reddit_submission)
         else:
             return DirectSubmission(self._config.user_agent(), reddit_submission, reddit_submission.url)
 

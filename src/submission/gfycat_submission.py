@@ -19,9 +19,11 @@ class GfycatSubmission(Submission):
         direct_submission.save(folder)
 
     def _get_gfycat_submission_url(self):
-        result = re.search('/([a-zA-Z0-9\\-]+)[.a-zA-Z0-9]*$', urllib.parse.urlparse(self._reddit_submission.url).path)
+        result = re.search('/([a-zA-Z0-9]+)[.a-zA-Z0-9\\-]*$', urllib.parse.urlparse(self._reddit_submission.url).path)
         if result is None:
-            raise DownloadException('Could not retrieve gfycat name from url: ' + self._reddit_submission.url)
+            raise DownloadException(
+                'Could not retrieve gfycat name from url: ' + urllib.parse.urlparse(self._reddit_submission.url).path
+            )
         try:
             try:
                 r = requests.get('https://api.gfycat.com/v1/gfycats/' + result.group(1))

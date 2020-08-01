@@ -26,10 +26,10 @@ class GfycatSubmission(Submission):
             )
         try:
             try:
-                r = requests.get('https://api.gfycat.com/v1/gfycats/' + result.group(1))
+                r = requests.get('https://api.gfycat.com/v1/gfycats/' + result.group(1), timeout=10)
                 r.raise_for_status()
             except requests.exceptions.RequestException as exception:
-                r = requests.get('https://api.redgifs.com/v1/gfycats/' + result.group(1))
+                r = requests.get('https://api.redgifs.com/v1/gfycats/' + result.group(1), timeout=10)
                 r.raise_for_status()
 
             json = r.json()

@@ -12,7 +12,7 @@ class DirectSubmission(Submission):
 
     def save(self, folder, filename_suffix=''):
         try:
-            r = requests.get(self._url, headers={'user-agent': self._user_agent})
+            r = requests.get(self._url, headers={'user-agent': self._user_agent}, timeout=10)
             r.raise_for_status()
 
             content_type = r.headers['content-type']

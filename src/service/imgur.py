@@ -30,6 +30,6 @@ class Imgur:
 
     def _request(self, url):
         headers = {'Authorization': 'Client-ID ' + self._imgur_credentials['client_id']}
-        r = requests.get(url, headers=headers)
+        r = requests.get(url, headers=headers, timeout=10)
         r.raise_for_status()
         return r.json()

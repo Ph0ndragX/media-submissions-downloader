@@ -23,7 +23,7 @@ class RedgifSubmission(Submission):
         if result is None:
             raise DownloadException('Could not retrieve redgif name from url: ' + self._reddit_submission.url)
         try:
-            r = requests.get('https://api.redgifs.com/v1/gfycats/' + result.group(1))
+            r = requests.get('https://api.redgifs.com/v1/gfycats/' + result.group(1), timeout=10)
             r.raise_for_status()
 
             json = r.json()

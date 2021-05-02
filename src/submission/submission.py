@@ -51,6 +51,9 @@ class Submission(ABC):
 
     @staticmethod
     def _guess_extension(content_type):
+        if content_type == "image/jpg":
+            content_type = "image/jpeg"
+
         ext = mimetypes.guess_extension(content_type)
         if ext in ['.jpe', '.jpeg']:
             ext = '.jpg'

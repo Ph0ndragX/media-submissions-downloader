@@ -4,6 +4,7 @@ from concurrent.futures.thread import ThreadPoolExecutor
 from submission.direct_submission import DirectSubmission
 from submission.gfycat_submission import GfycatSubmission
 from submission.imgur_submission import ImgurSubmission
+from submission.redditgallery_submission import RedditGallery
 from submission.redgif_submission import RedgifSubmission
 from submission.tumblr_submission import TumblrSubmission
 
@@ -56,6 +57,8 @@ class MediaSubmissions:
             return TumblrSubmission(None, reddit_submission)
         elif 'redgifs' in reddit_submission.url:
             return RedgifSubmission(self._config.user_agent(), reddit_submission)
+        elif 'reddit.com/gallery' in reddit_submission.url:
+            return RedditGallery(self._config.user_agent(), reddit_submission)
         else:
             return DirectSubmission(self._config.user_agent(), reddit_submission, reddit_submission.url)
 

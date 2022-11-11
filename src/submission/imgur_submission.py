@@ -15,7 +15,7 @@ class ImgurSubmission(Submission):
 
     def save(self, folder):
         for idx, media_url in enumerate(self._get_imgur_submission_urls()):
-            direct_submission = DirectSubmission(self._reddit_submission, media_url)
+            direct_submission = DirectSubmission("", self._reddit_submission, media_url)
             direct_submission.save(folder, '' if idx == 0 else ' ' + str(idx + 1))
 
     def _get_imgur_submission_urls(self):

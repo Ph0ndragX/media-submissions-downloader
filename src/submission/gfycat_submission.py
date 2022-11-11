@@ -14,7 +14,7 @@ class GfycatSubmission(Submission):
         self._reddit_submission = reddit_submission
 
     def save(self, folder):
-        direct_submission = DirectSubmission(self._reddit_submission, self._get_gfycat_submission_url())
+        direct_submission = DirectSubmission("", self._reddit_submission, self._get_gfycat_submission_url())
         direct_submission.save(folder)
 
     def _get_gfycat_submission_url(self):

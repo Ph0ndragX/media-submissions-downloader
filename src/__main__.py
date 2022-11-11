@@ -11,6 +11,7 @@ from config.file_config import FileConfig
 from media_submissions_downloader_for_reddit import MediaSubmissionDownloaderForReddit
 from service.imgur import Imgur
 from service.reddit import Reddit
+from service.redgif import Redgif
 from submission.media_submissions import MediaSubmissions
 
 if __name__ == "__main__":
@@ -19,6 +20,7 @@ if __name__ == "__main__":
     config = Config(arg_config, file_config)
     imgur = Imgur(config.imgur_credentials())
     reddit = Reddit(config.reddit_credentials())
-    media_submissions = MediaSubmissions(config, reddit, imgur)
+    redgif = Redgif()
+    media_submissions = MediaSubmissions(config, reddit, imgur, redgif)
     downloader = MediaSubmissionDownloaderForReddit(config, media_submissions)
     downloader.run()

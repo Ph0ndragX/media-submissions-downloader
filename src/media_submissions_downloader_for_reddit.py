@@ -27,7 +27,7 @@ class MediaSubmissionDownloaderForReddit:
     def _download_submissions(self):
         print('[+] Submissions will be saved to: {}'.format(self._config.save_dir()))
 
-        downloaded_submissions = self._media_submissions.downloaded_submissions(self._config.save_dir())
+        downloaded_submissions = self._media_submissions.downloaded_submissions()
         if len(downloaded_submissions) > 0:
             print('[+] There are already {} submissions downloaded, these will be omitted.'
                   .format(len(downloaded_submissions)))
@@ -39,7 +39,6 @@ class MediaSubmissionDownloaderForReddit:
         print('[+] {} submissions will be downloaded.'.format(self._num_to_download))
 
         self._media_submissions.save(
-            self._config.save_dir(),
             lambda idx, sub: self._on_submission_downloaded(idx, sub),
             lambda idx, sub, e: self._on_submission_download_error(idx, sub, e)
         )

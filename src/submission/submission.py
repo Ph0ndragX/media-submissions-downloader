@@ -27,12 +27,19 @@ class Submission(ABC):
 
     def filename(self, folder, filename_suffix=''):
         subreddit = Submission._normalize_name(self._reddit_submission.subreddit.display_name)
+        title = Submission._normalize_name(self._reddit_submission.id + "_" + self._reddit_submission.title)
+        title += filename_suffix
+        return folder.joinpath(subreddit, title)
+
+    def old_filename(self, folder, filename_suffix=''):
+        subreddit = Submission._normalize_name(self._reddit_submission.subreddit.display_name)
         title = Submission._normalize_name(self._reddit_submission.title)
         title += filename_suffix
         return folder.joinpath(subreddit, title)
 
     def is_downloaded(self, folder):
-        return self._file_exists_ignoring_extension(self.filename(folder))
+        return self._file_exists_ignoring_extension(self.filename(folder)) or \
+               self._file_exists_ignoring_extension(self.old_filename(folder))
 
     @staticmethod
     def content_type_extension(filename, content_type):
@@ -44,6 +51,9 @@ class Submission(ABC):
 
     @staticmethod
     def _guess_extension(content_type):
+        if content_type == "image/jpg":
+            content_type = "image/jpeg"
+
         ext = mimetypes.guess_extension(content_type)
         if ext in ['.jpe', '.jpeg']:
             ext = '.jpg'

@@ -8,14 +8,15 @@ from submission.submission import Submission, DownloadException
 
 class ImgurSubmission(Submission):
 
-    def __init__(self, imgur, reddit_submission):
+    def __init__(self, user_agent, imgur, reddit_submission):
         super().__init__(reddit_submission)
+        self._user_agent = user_agent
         self._imgur = imgur
         self._reddit_submission = reddit_submission
 
     def save(self, folder):
         for idx, media_url in enumerate(self._get_imgur_submission_urls()):
-            direct_submission = DirectSubmission("", self._reddit_submission, media_url)
+            direct_submission = DirectSubmission(self._user_agent, self._reddit_submission, media_url)
             direct_submission.save(folder, '' if idx == 0 else ' ' + str(idx + 1))
 
     def _get_imgur_submission_urls(self):

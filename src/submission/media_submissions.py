@@ -57,8 +57,6 @@ class MediaSubmissions:
             return GfycatSubmission(self._config.user_agent(), reddit_submission)
         elif 'tumblr' in reddit_submission.url:
             return TumblrSubmission(None, reddit_submission)
-        elif 'redgifs' in reddit_submission.url:
-            return RedgifSubmission(self._config.user_agent(), reddit_submission)
         elif 'reddit.com/gallery' in reddit_submission.url:
             return RedditGallery(self._config.user_agent(), reddit_submission)
         elif 'redgif' in reddit_submission.url:

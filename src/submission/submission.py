@@ -3,6 +3,9 @@ import re
 from abc import ABC, abstractmethod
 
 
+FILENAME_LENGTH_LIMIT = 100
+
+
 class DownloadException(Exception):
     pass
 
@@ -28,18 +31,26 @@ class Submission(ABC):
     def filename(self, folder, filename_suffix=''):
         subreddit = Submission._normalize_name(self._reddit_submission.subreddit.display_name)
         title = Submission._normalize_name(self._reddit_submission.id + "_" + self._reddit_submission.title)
+        if len(title) > FILENAME_LENGTH_LIMIT:
+            title = title[:FILENAME_LENGTH_LIMIT]
         title += filename_suffix
         return folder.joinpath(subreddit, title)
 
-    def old_filename(self, folder, filename_suffix=''):
+    def filenameV2(self, folder, filename_suffix=''):
+        subreddit = Submission._normalize_name(self._reddit_submission.subreddit.display_name)
+        title = Submission._normalize_name(self._reddit_submission.id + "_" + self._reddit_submission.title)
+        title += filename_suffix
+        return folder.joinpath(subreddit, title)
+
+    def filenameV1(self, folder, filename_suffix=''):
         subreddit = Submission._normalize_name(self._reddit_submission.subreddit.display_name)
         title = Submission._normalize_name(self._reddit_submission.title)
         title += filename_suffix
         return folder.joinpath(subreddit, title)
 
     def is_downloaded(self, folder):
-        return self._file_exists_ignoring_extension(self.filename(folder)) or \
-               self._file_exists_ignoring_extension(self.old_filename(folder))
+        filenames = [self.filenameV1(folder), self.filenameV2(folder), self.filename(folder)]
+        return any([self._file_exists_ignoring_extension(fname) for fname in filenames])
 
     @staticmethod
     def content_type_extension(filename, content_type):

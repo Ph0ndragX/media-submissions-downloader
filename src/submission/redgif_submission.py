@@ -28,7 +28,7 @@ class RedgifSubmission(Submission):
                     f.write(chunk)
 
         except requests.exceptions.RequestException as exception:
-            raise DownloadException(exception)
+            raise DownloadException(f"Got response {exception.response.status_code} with body: {exception.response.text}")
 
     def _extract_id(self, url):
         return urllib.parse.urlparse(url).path.split("/")[-1]

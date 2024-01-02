@@ -36,21 +36,8 @@ class Submission(ABC):
         title += filename_suffix
         return folder.joinpath(subreddit, title)
 
-    def filenameV2(self, folder, filename_suffix=''):
-        subreddit = Submission._normalize_name(self._reddit_submission.subreddit.display_name)
-        title = Submission._normalize_name(self._reddit_submission.id + "_" + self._reddit_submission.title)
-        title += filename_suffix
-        return folder.joinpath(subreddit, title)
-
-    def filenameV1(self, folder, filename_suffix=''):
-        subreddit = Submission._normalize_name(self._reddit_submission.subreddit.display_name)
-        title = Submission._normalize_name(self._reddit_submission.title)
-        title += filename_suffix
-        return folder.joinpath(subreddit, title)
-
     def is_downloaded(self, folder):
-        filenames = [self.filenameV1(folder), self.filenameV2(folder), self.filename(folder)]
-        return any([self._file_exists_ignoring_extension(fname) for fname in filenames])
+        return self._file_exists_ignoring_extension(self.filename(folder))
 
     @staticmethod
     def content_type_extension(filename, content_type):

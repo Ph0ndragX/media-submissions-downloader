@@ -1,5 +1,4 @@
 import configparser
-import pathlib
 
 
 class FileConfig:
@@ -7,51 +6,33 @@ class FileConfig:
     def __init__(self, filename):
         self._config = configparser.ConfigParser()
         self._config.read(filename)
-
-    def reddit_credentials(self):
-        if 'reddit' not in self._config:
-            return {}
-
-        credentials = {}
-        if 'client_id' in self._config['reddit']:
-            credentials['client_id'] = self._config['reddit']['client_id']
-
-        if 'client_secret' in self._config['reddit']:
-            credentials['client_secret'] = self._config['reddit']['client_secret']
-
-        if self.user_agent() is not None:
-            credentials['user_agent'] = self.user_agent()
-
-        if 'username' in self._config['reddit']:
-            credentials['username'] = self._config['reddit']['username']
-
-        if 'password' in self._config['reddit']:
-            credentials['password'] = self._config['reddit']['password']
-        return credentials
-
-    def imgur_credentials(self):
-        if 'imgur' not in self._config:
-            return {}
-
-        credentials = {}
-        if 'client_id' in self._config['imgur']:
-            credentials['client_id'] = self._config['imgur']['client_id']
-        return credentials
-
-    def save_dir(self):
-        if 'default' not in self._config or 'output_dir' not in self._config['default']:
-            return None
-
-        return pathlib.Path(self._config['default']['output_dir'])
-
-    def display(self):
-        if 'default' not in self._config:
-            return None
-
-        return self._config['default'].getboolean('display')
+        
+        self._reddits_configs = []
+        self._imgur_config = {'client_id': self._config['imgur']['client_id']}
+        self._user_agent = self._config['default']['user_agent'] 
+        
+        for social in [s.strip() for s in self._config['default']['socials'].split(",")]:
+            social_config = self._config[social]
+            social_type = social_config["type"]
+            if social_type == 'reddit':
+                self._reddits_configs.append(self._reddit_config(social, social_config))
 
     def user_agent(self):
-        if 'default' not in self._config or 'user_agent' not in self._config['default']:
-            return None
+        return self._user_agent
 
-        return self._config['default']['user_agent']
+    def reddit_configs(self):
+        return self._reddits_configs
+
+    def imgur_config(self):
+        return self._imgur_config
+
+    def _reddit_config(self, name, social_config):
+        return {
+            'name': name,
+            'output': social_config['output'],
+            'client_id': social_config['client_id'],
+            'client_secret': social_config['client_secret'],
+            'username': self._config['reddit']['username'],
+            'password': self._config['reddit']['password'],
+            'user_agent': self._user_agent
+        }

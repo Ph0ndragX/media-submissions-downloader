@@ -8,20 +8,19 @@ from submission.submission import Submission, DownloadException
 
 class ImgurSubmission(Submission):
 
-    def __init__(self, user_agent, imgur, reddit_submission):
-        super().__init__(reddit_submission)
+    def __init__(self, submission_id, title, link, community_name, url, user_agent, imgur):
+        super().__init__(submission_id, title, link, community_name, url)
         self._user_agent = user_agent
         self._imgur = imgur
-        self._reddit_submission = reddit_submission
 
     def save(self, folder):
         for idx, media_url in enumerate(self._get_imgur_submission_urls()):
-            direct_submission = DirectSubmission(self._user_agent, self._reddit_submission, media_url)
+            direct_submission = DirectSubmission(self._submission_id(), self.title(), self.link(), self.community_name(), media_url, self._user_agent)
             direct_submission.save(folder, '' if idx == 0 else ' ' + str(idx + 1))
 
     def _get_imgur_submission_urls(self):
         try:
-            return self._imgur.get_media_links(self._extract_imgur_hash(self._reddit_submission.url))
+            return self._imgur.get_media_links(self._extract_imgur_hash(self.url()))
         except imgur.ImgurException as exception:
             raise DownloadException(exception)
 

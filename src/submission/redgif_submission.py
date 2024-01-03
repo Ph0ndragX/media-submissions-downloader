@@ -7,13 +7,13 @@ from submission.submission import Submission, DownloadException
 
 class RedgifSubmission(Submission):
 
-    def __init__(self, redgif, reddit_submission):
-        super().__init__(reddit_submission)
+    def __init__(self, submission_id, title, link, community_name, url, redgif):
+        super().__init__(submission_id, title, link, community_name, url)
         self._redgif = redgif
 
     def save(self, folder, filename_suffix=''):
         try:
-            gif_info = self._redgif.get_gif_info(self._extract_id(self._reddit_submission.url))
+            gif_info = self._redgif.get_gif_info(self._extract_id(self.url()))
             hd_url = gif_info["gif"]["urls"]["hd"]
             gif = self._redgif.get_gif(hd_url)
 

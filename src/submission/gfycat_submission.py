@@ -9,20 +9,19 @@ from submission.submission import Submission, DownloadException
 
 class GfycatSubmission(Submission):
 
-    def __init__(self, user_agent, reddit_submission):
-        super().__init__(reddit_submission)
+    def __init__(self, submission_id, title, link, community_name, url, user_agent):
+        super().__init__(submission_id, title, link, community_name, url)
         self._user_agent = user_agent
-        self._reddit_submission = reddit_submission
 
     def save(self, folder):
-        direct_submission = DirectSubmission(self._user_agent, self._reddit_submission, self._get_gfycat_submission_url())
+        direct_submission = DirectSubmission(self._submission_id(), self.title(), self.link(), self.community_name(), self._get_gfycat_submission_url(), self._user_agent)
         direct_submission.save(folder)
 
     def _get_gfycat_submission_url(self):
-        result = re.search('/([a-zA-Z0-9]+)[.a-zA-Z0-9\\-]*$', urllib.parse.urlparse(self._reddit_submission.url).path)
+        result = re.search('/([a-zA-Z0-9]+)[.a-zA-Z0-9\\-]*$', urllib.parse.urlparse(self.url()).path)
         if result is None:
             raise DownloadException(
-                'Could not retrieve gfycat name from url: ' + urllib.parse.urlparse(self._reddit_submission.url).path
+                'Could not retrieve gfycat name from url: ' + urllib.parse.urlparse((self.url())).path
             )
         try:
             try:

@@ -5,14 +5,13 @@ from submission.submission import Submission, DownloadException
 
 class DirectSubmission(Submission):
 
-    def __init__(self, user_agent, reddit_submission, url):
-        super().__init__(reddit_submission)
-        self._url = url
+    def __init__(self, submission_id, title, link, community_name, url, user_agent):
+        super().__init__(submission_id, title, link, community_name, url)
         self._user_agent = user_agent
 
     def save(self, folder, filename_suffix=''):
         try:
-            r = requests.get(self._url, headers={'user-agent': self._user_agent}, timeout=10)
+            r = requests.get(self.url(), headers={'user-agent': self._user_agent}, timeout=10)
             r.raise_for_status()
 
             content_type = r.headers['content-type']

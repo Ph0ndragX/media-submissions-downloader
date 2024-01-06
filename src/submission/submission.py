@@ -5,6 +5,7 @@ from abc import ABC, abstractmethod
 
 FILENAME_LENGTH_LIMIT = 100
 
+mimetypes.add_type("image/webp", ".webp")
 
 class DownloadException(Exception):
     pass

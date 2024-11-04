@@ -42,9 +42,9 @@ class MediaSubmissionDownloader:
                 try:
                     data = future.result()
                     print(self._format_submission_display(submission, "Downloaded"))
-                except Exception as e:
+                except Exception:
+                    print(self._format_submission_display(submission, "Exception occurred"))
                     print(traceback.format_exc())
-                    print(self._format_submission_display(submission, str(e)))
 
     def _process_lemmy(self, lemmy):
         print(f"Lemmy user: {lemmy.username()}")
@@ -62,8 +62,9 @@ class MediaSubmissionDownloader:
                 try:
                     data = future.result()
                     print(self._format_submission_display(submission, "Downloaded"))
-                except Exception as e:
-                    print(self._format_submission_display(submission, str(e)))
+                except Exception:
+                    print(self._format_submission_display(submission, "Exception occurred"))
+                    print(traceback.format_exc())
 
     def _format_submission_display(self, submission, message=''):
         return f"{submission.title()} | {submission.community_name()} | {submission.link()} | {message}"

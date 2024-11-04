@@ -1,4 +1,5 @@
 import concurrent
+import traceback
 from concurrent.futures import ThreadPoolExecutor
 
 from submission.lemmy_submissions import LemmySubmissions
@@ -42,6 +43,7 @@ class MediaSubmissionDownloader:
                     data = future.result()
                     print(self._format_submission_display(submission, "Downloaded"))
                 except Exception as e:
+                    print(traceback.format_exc())
                     print(self._format_submission_display(submission, str(e)))
 
     def _process_lemmy(self, lemmy):

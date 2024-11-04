@@ -9,9 +9,13 @@ class DirectSubmission(Submission):
         super().__init__(submission_id, title, link, community_name, url)
         self._user_agent = user_agent
 
-    def save(self, folder, filename_suffix=''):
+    def save(self, folder, filename_suffix='', additional_headers=None):
         try:
-            r = requests.get(self.url(), headers={'user-agent': self._user_agent}, timeout=10)
+            headers = {'user-agent': self._user_agent}
+            if additional_headers is not None:
+                headers.update(additional_headers)
+
+            r = requests.get(self.url(), headers=headers, timeout=10)
             r.raise_for_status()
 
             content_type = r.headers['content-type']

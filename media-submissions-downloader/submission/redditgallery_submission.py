@@ -12,10 +12,12 @@ class RedditGallery(Submission):
         self._reddit_submission = reddit_submission
 
     def save(self, folder):
-        images = self._get_gallery_images_urls()
-        for idx, media_url in enumerate(images):
-            direct_submission = DirectSubmission(self._submission_id, self._title, self._link, self._community_name, media_url, self._user_agent)
-            direct_submission.save(folder, '' if idx == 0 else ' ' + str(idx + 1))
+        raise Exception("Gallery not handled")
+
+        #images = self._get_gallery_images_urls()
+        #for idx, media_url in enumerate(images):
+        #    direct_submission = DirectSubmission(self._submission_id, self._title, self._link, self._community_name, media_url, self._user_agent)
+        #    direct_submission.save(folder, '' if idx == 0 else ' ' + str(idx + 1))
 
     def _get_gallery_images_urls(self):
         return [

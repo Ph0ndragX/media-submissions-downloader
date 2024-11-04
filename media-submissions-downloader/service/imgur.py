@@ -20,6 +20,9 @@ class Imgur:
             except requests.exceptions.RequestException as exception:
                 raise ImgurException(exception)
 
+    def auth_headers(self):
+        return {'Authorization': 'Client-ID ' + self._imgur_credentials['client_id']}
+
     def _get_album_media_links(self, album_hash):
         album = self._request('https://api.imgur.com/3/album/' + album_hash)
         return album['data']
@@ -29,7 +32,6 @@ class Imgur:
         return image['data']
 
     def _request(self, url):
-        headers = {'Authorization': 'Client-ID ' + self._imgur_credentials['client_id']}
-        r = requests.get(url, headers=headers, timeout=10)
+        r = requests.get(url, headers=self.auth_headers(), timeout=10)
         r.raise_for_status()
         return r.json()

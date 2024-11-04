@@ -15,8 +15,15 @@ class ImgurSubmission(Submission):
 
     def save(self, folder):
         for idx, media_url in enumerate(self._get_imgur_submission_urls()):
-            direct_submission = DirectSubmission(self._submission_id(), self.title(), self.link(), self.community_name(), media_url, self._user_agent)
-            direct_submission.save(folder, '' if idx == 0 else ' ' + str(idx + 1))
+            direct_submission = DirectSubmission(
+                self._submission_id(),
+                self.title(),
+                self.link(),
+                self.community_name(),
+                media_url,
+                self._user_agent
+            )
+            direct_submission.save(folder, '' if idx == 0 else ' ' + str(idx + 1), additional_headers=self._imgur.auth_headers())
 
     def _get_imgur_submission_urls(self):
         try:

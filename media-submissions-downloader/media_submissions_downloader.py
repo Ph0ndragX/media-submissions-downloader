@@ -1,9 +1,8 @@
-import concurrent
 import traceback
-from concurrent.futures import ThreadPoolExecutor
 
 from submission.lemmy_submissions import LemmySubmissions
 from submission.reddit_submissions import RedditSubmissions
+from submission.submission import DownloadException
 
 
 class MediaSubmissionDownloader:
@@ -35,16 +34,13 @@ class MediaSubmissionDownloader:
         print(f"Not downloaded submission(s): {len(not_downloaded_submissions)}")
         print(f"Downloading to '{output}'")
 
-        with concurrent.futures.ThreadPoolExecutor() as executor:
-            future_to_submission = {executor.submit(s.save, output): s for s in not_downloaded_submissions}
-            for future in concurrent.futures.as_completed(future_to_submission):
-                submission = future_to_submission[future]
-                try:
-                    data = future.result()
-                    print(self._format_submission_display(submission, "Downloaded"))
-                except Exception:
-                    print(self._format_submission_display(submission, "Exception occurred"))
-                    print(traceback.format_exc())
+        for s in not_downloaded_submissions:
+            try:
+                s.save(output)
+                print(self._format_submission_display(s, "Downloaded"))
+            except DownloadException:
+                print(self._format_submission_display(s, "Exception occurred"))
+                print(traceback.format_exc())
 
     def _process_lemmy(self, lemmy):
         print(f"Lemmy user: {lemmy.username()}")
@@ -55,16 +51,13 @@ class MediaSubmissionDownloader:
         print(f"Not downloaded submission(s): {len(not_downloaded_submissions)}")
         print(f"Downloading to '{output}'")
 
-        with concurrent.futures.ThreadPoolExecutor() as executor:
-            future_to_submission = {executor.submit(s.save, output): s for s in not_downloaded_submissions}
-            for future in concurrent.futures.as_completed(future_to_submission):
-                submission = future_to_submission[future]
-                try:
-                    data = future.result()
-                    print(self._format_submission_display(submission, "Downloaded"))
-                except Exception:
-                    print(self._format_submission_display(submission, "Exception occurred"))
-                    print(traceback.format_exc())
+        for s in not_downloaded_submissions:
+            try:
+                s.save(output)
+                print(self._format_submission_display(s, "Downloaded"))
+            except DownloadException:
+                print(self._format_submission_display(s, "Exception occurred"))
+                print(traceback.format_exc())
 
     def _format_submission_display(self, submission, message=''):
         return f"{submission.title()} | {submission.community_name()} | {submission.link()} | {message}"

@@ -13,11 +13,11 @@ class Redgif:
         r.raise_for_status()
         self._token = r.json()["token"]
 
-    def get_gif_info(self, id):
+    def get_gif_info(self, gif_id):
         if self._token is None:
             self.get_temporary_token()
 
-        r = self._sess.get(f"https://api.redgifs.com/v2/gifs/{id}", headers={"Authorization": f"Bearer {self._token}"})
+        r = self._sess.get(f"https://api.redgifs.com/v2/gifs/{gif_id}", headers={"Authorization": f"Bearer {self._token}"})
         r.raise_for_status()
         return r.json()
 

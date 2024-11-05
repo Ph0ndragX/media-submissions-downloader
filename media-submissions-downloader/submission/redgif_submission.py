@@ -31,7 +31,19 @@ class RedgifSubmission(Submission):
             raise DownloadException(f"Got response {exception.response.status_code} with body: {exception.response.text}")
 
     def _extract_id(self, url):
-        return urllib.parse.urlparse(url).path.split("/")[-1]
+        extracted = None
+        parts = urllib.parse.urlparse(url).path.split("/")
+        parts.reverse()
+        for p in parts:
+            if p == '':
+                continue
+            else:
+                extracted = p
+                break
+
+        if extracted is None or extracted.strip() == '':
+            raise Exception("Failed to extract redgif id from URL: " + url)
+        return extracted
 
     def _extract_extension(self, url):
         last_fragment = urllib.parse.urlparse(url).path.split("/")[-1]

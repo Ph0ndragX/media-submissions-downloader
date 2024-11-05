@@ -20,7 +20,7 @@ class DirectSubmission(Submission):
 
             content_type = r.headers['content-type']
             if content_type.split('/')[0] not in ['image', 'video']:
-                raise DownloadException('Submission is not a media file. Content-Type: ' + content_type)
+                raise DownloadException(f"Submission is not a media file (content-type not image or video. Requested URL: {self.url()}, got content-type: {content_type} ")
 
             filename = self.filename(folder, filename_suffix)
             filename = self.content_type_extension(filename, content_type)

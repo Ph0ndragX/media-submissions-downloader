@@ -56,7 +56,7 @@ class Submission(ABC):
 
     @staticmethod
     def _normalize_name(filename):
-        return re.sub('[^a-zA-Z0-9!,\\s\[\]()-]', '_', filename)
+        return re.sub(r"[^a-zA-Z0-9!, \[\]()-]", '_', filename).strip()
 
     @staticmethod
     def _guess_extension(content_type):

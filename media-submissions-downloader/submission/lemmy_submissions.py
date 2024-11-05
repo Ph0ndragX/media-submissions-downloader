@@ -23,7 +23,7 @@ class LemmySubmissions:
         community_name = lemmy_post.community.title
         url = lemmy_post.post.url
 
-        if self._direct_image_link(url):
+        if self._direct_image_link(url) and ('redgif' not in url):
             return DirectSubmission(submission_id, title, link, community_name, url, self._user_agent)
         elif 'imgur' in url:
             return ImgurSubmission(submission_id, title, link, community_name, url, self._user_agent, self._imgur)

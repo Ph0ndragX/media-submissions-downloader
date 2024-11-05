@@ -39,8 +39,7 @@ class MediaSubmissionDownloader:
                 s.save(output)
                 print(self._format_submission_display(s, "Downloaded"))
             except DownloadException:
-                print(self._format_submission_display(s, "Exception occurred"))
-                print(traceback.format_exc())
+                print(self._format_submission_display(s, f"Exception occurred: \n{traceback.format_exc()}"))
 
     def _process_lemmy(self, lemmy):
         print(f"Lemmy user: {lemmy.username()}")
@@ -56,8 +55,7 @@ class MediaSubmissionDownloader:
                 s.save(output)
                 print(self._format_submission_display(s, "Downloaded"))
             except DownloadException:
-                print(self._format_submission_display(s, "Exception occurred"))
-                print(traceback.format_exc())
+                print(self._format_submission_display(s, f"Exception occurred: \n{traceback.format_exc()}"))
 
     def _format_submission_display(self, submission, message=''):
         return f"{submission.title()} | {submission.community_name()} | {submission.link()} | {message}"

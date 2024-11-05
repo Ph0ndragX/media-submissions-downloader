@@ -24,7 +24,7 @@ class RedditSubmissions:
         community_name = reddit_submission.subreddit.display_name
         url = reddit_submission.url
 
-        if self._direct_image_link(url):
+        if self._direct_image_link(url) and ('redgif' not in url):
             return DirectSubmission(submission_id, title, link, community_name, url, self._user_agent)
         elif 'imgur' in url:
             return ImgurSubmission(submission_id, title, link, community_name, url, self._user_agent, self._imgur)

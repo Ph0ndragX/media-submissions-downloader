@@ -1,3 +1,4 @@
 requests==2.32.3
 praw==7.8.1
 plemmy==0.4.8
+redgifs==1.9.5

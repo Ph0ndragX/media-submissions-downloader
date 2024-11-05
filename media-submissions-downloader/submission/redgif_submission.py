@@ -1,5 +1,6 @@
 import urllib.parse
 
+import redgifs.errors
 import requests
 
 from submission.submission import Submission, DownloadException
@@ -14,20 +15,16 @@ class RedgifSubmission(Submission):
     def save(self, folder, filename_suffix=''):
         try:
             gif_info = self._redgif.get_gif_info(self._extract_id(self.url()))
-            hd_url = gif_info["gif"]["urls"]["hd"]
-            gif = self._redgif.get_gif(hd_url)
+            hd_url = gif_info.urls.hd
 
             extension = self._extract_extension(hd_url)
             filename = self.filename(folder, filename_suffix).with_suffix(extension)
             filename.parent.mkdir(parents=True, exist_ok=True)
             filename.unlink(missing_ok=True)
-            filename.touch()
 
-            with filename.open('wb') as f:
-                for chunk in gif.iter_content(chunk_size=128):
-                    f.write(chunk)
+            self._redgif.get_gif(hd_url, filename)
 
-        except requests.exceptions.RequestException as exception:
+        except redgifs.errors.HTTPException as exception:
             raise DownloadException(f"Got response {exception.response.status_code} with body: {exception.response.text}")
 
     def _extract_id(self, url):
@@ -43,7 +40,7 @@ class RedgifSubmission(Submission):
 
         if extracted is None or extracted.strip() == '':
             raise Exception("Failed to extract redgif id from URL: " + url)
-        return extracted
+        return extracted.split(".")[0] if "." in extracted else extracted
 
     def _extract_extension(self, url):
         last_fragment = urllib.parse.urlparse(url).path.split("/")[-1]
